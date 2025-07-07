@@ -163,21 +163,27 @@ class ARViewController: UIViewController, ARSessionDelegate {
         gridOverlayView = UIView(frame: self.view.frame)
         gridOverlayView.isUserInteractionEnabled = false
         gridOverlayView.backgroundColor = .clear
-        
-        let gridWidth = gridOverlayView.frame.width / 3
-        let gridHeight = gridOverlayView.frame.height / 3
-        
-        for i in 0...2 {
-            for j in 0...2 {
-                let gridCell = UIView(frame: CGRect(x: CGFloat(i) * gridWidth, y: CGFloat(j) * gridHeight, width: gridWidth, height: gridHeight))
-                gridCell.layer.borderWidth = 1
-                gridCell.layer.borderColor = UIColor.red.cgColor
-                gridOverlayView.addSubview(gridCell)
-            }
-        }
-        
+
+        let viewWidth = gridOverlayView.frame.width
+        let viewHeight = gridOverlayView.frame.height
+
+        let startX = viewWidth / 12
+        let endX = 11 * (viewWidth / 12)
+        let startY = viewHeight / 3
+        let endY = 2 * (viewHeight / 3)
+
+        let regionWidth = endX - startX
+        let regionHeight = endY - startY
+
+        let detectionRect = UIView(frame: CGRect(x: startX, y: startY, width: regionWidth, height: regionHeight))
+        detectionRect.layer.borderWidth = 2
+        detectionRect.layer.borderColor = UIColor.red.cgColor
+        detectionRect.backgroundColor = .clear
+
+        gridOverlayView.addSubview(detectionRect)
         view.addSubview(gridOverlayView)
     }
+
     
     @objc func toggleARSession() {
         if isARSessionRunning {
@@ -218,10 +224,10 @@ class ARViewController: UIViewController, ARSessionDelegate {
             return
         }
 
-        let floatBuffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<Float32>.self)
+        let floatBuffer = baseAddress.assumingMemoryBound(to: Float32.self)
 
-        let startX = width / 3
-        let endX = 2 * (width / 3)
+        let startX = width / 12
+        let endX = 11 * (width / 12)
         let startY = height / 3
         let endY = 2 * (height / 3)
 
@@ -270,6 +276,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
             if timeToImpact < ttiThreshold && speed < speedThreshold  {
                 differenceLabel.textColor = .red
                 timeToImpactLabel.textColor = .red
+                playAlertSound()
             } else {
                 differenceLabel.textColor = .blue
                 timeToImpactLabel.textColor = .blue
