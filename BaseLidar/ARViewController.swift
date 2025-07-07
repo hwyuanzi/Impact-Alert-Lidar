@@ -22,7 +22,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
     var speedThresholdLabel: UILabel!
     var speedSlider: UISlider!
     var slabel: UILabel!
-    
+    var depthArray: [[Float32]] = []
     var middleSums: [Float32] = []
     var frameCounter: Int = 0
     var threatDistances: [Float32] = []
@@ -216,6 +216,13 @@ class ARViewController: UIViewController, ARSessionDelegate {
     
     func processMiddleDepthData(_ depthData: CVPixelBuffer) {
         CVPixelBufferLockBaseAddress(depthData, .readOnly)
+        
+        var depthValues: [Float32] = []
+        var change: Float32 = 0
+        var numChanges = 0
+        var i = 0
+        var difference: Float32 = 0
+        var threatDistance: Float32 = 0
 
         let width = CVPixelBufferGetWidth(depthData)
         let height = CVPixelBufferGetHeight(depthData)
@@ -231,8 +238,6 @@ class ARViewController: UIViewController, ARSessionDelegate {
         let startY = height / 3
         let endY = 2 * (height / 3)
 
-        var depthValues: [Float32] = []
-
         for y in startY..<endY {
             for x in startX..<endX {
                 let depth = floatBuffer[y * width + x]
@@ -242,37 +247,51 @@ class ARViewController: UIViewController, ARSessionDelegate {
 
         CVPixelBufferUnlockBaseAddress(depthData, .readOnly)
 
-        depthValues.sort()
-        let quartileIndex = depthValues.count / 4
-        let d = depthValues[quartileIndex]
+        if threatDistances.count >= 10 && depthArray.count >= 1 {
+            let prevDepthValues = depthArray.removeFirst()
+            i = 0
+            change = 0
+            numChanges = 0
+            threatDistance = 0
+            
+            for _ in startY..<endY {
+                for _ in startX..<endX {
+                    let currentDepth = depthValues[i]
+                    let previousDepth = prevDepthValues[i]
+                    let delta = currentDepth - previousDepth
+                    if abs(delta) > 0.05 {
+                        numChanges += 1
+                        change += delta
+                        threatDistance += currentDepth
+                    }
+                    i += 1
+                }
+            }
 
-        let threshold = d + min(0.5, 0.1 * d)
-
-        let closePoints = depthValues.filter { $0 <= threshold }
-        let threatDistance = closePoints.reduce(0, +) / Float32(closePoints.count)
-        var previousThreatDistance: Float32? = nil
-
-        if threatDistances.count >= 10 {
-            previousThreatDistance = threatDistances.removeFirst()
-            let difference = threatDistance - previousThreatDistance!
+            if numChanges > 0 {
+                difference = change / Float32(numChanges)
+                threatDistance = threatDistance / Float32(numChanges)
+            } else {
+                difference = 0
+                threatDistance = 0
+            }
 
             differenceLabel.text = String(format: "Difference: %.2f", difference)
 
-
             // Calculate Speed
-            let timeInterval: Float = 10.0 / 20.0 // Assuming ARKit runs at 20 FPS
+            let timeInterval: Float32 = 10.0 / 20.0 // 10帧，每秒20帧
             let speed = difference / timeInterval
             speedLabel.text = String(format: "Speed: %.2f m/s", speed)
 
             // Calculate Time to Impact
-            let timeToImpact: Float
-            if speed > 0 {
+            let timeToImpact: Float32
+            if speed >= 0 {
                 timeToImpact = 9999
             } else {
                 timeToImpact = threatDistance / abs(speed)
             }
             timeToImpactLabel.text = String(format: "Time to Impact: %.2f s", timeToImpact)
-            
+
             if timeToImpact < ttiThreshold && speed < speedThreshold  {
                 differenceLabel.textColor = .red
                 timeToImpactLabel.textColor = .red
@@ -281,18 +300,17 @@ class ARViewController: UIViewController, ARSessionDelegate {
                 differenceLabel.textColor = .blue
                 timeToImpactLabel.textColor = .blue
             }
-            
         }
 
         threatDistances.append(threatDistance)
-        
-        // among 10 frame -> 9th
-        if let prev = previousThreatDistance {
+        depthArray.append(depthValues)
+
+        if let prev = threatDistances.dropLast().last {
             previousAverageLabel.text = String(format: "Previous Average: %.2f", prev)
         } else {
             previousAverageLabel.text = "Previous Average: N/A"
         }
-        // 10th
+
         currentAverageLabel.text = String(format: "Current Average: %.2f", threatDistance)
     }
 }
