@@ -1,6 +1,6 @@
 import UIKit
 import ARKit
-
+// Main AR view controller that handles UI, AR session, depth processing, and alerts
 class ARViewController: UIViewController, ARSessionDelegate {
     
     var sceneView: ARSCNView!
@@ -42,13 +42,14 @@ class ARViewController: UIViewController, ARSessionDelegate {
         configuration.frameSemantics = .sceneDepth
         sceneView.session.delegate = self
         
-        setupUI()
-        setupGridOverlay()
-        setupTTISlider()
-        setupSpeedSlider()
-        loadSound()
+        setupUI()               // Set up user interface elements
+        setupGridOverlay()      // Set up the detection grid overlay on the screen
+        setupTTISlider()        // Set up the time-to-impact threshold slider
+        setupSpeedSlider()      // Set up the speed threshold slider
+        loadSound()             // Load alert sound
     }
     
+    // Load the alert sound from the app bundle
     func loadSound() {
             guard let soundURL = Bundle.main.url(forResource: "alert", withExtension: "mp3") else {
                 print("Sound file not found")
@@ -62,12 +63,13 @@ class ARViewController: UIViewController, ARSessionDelegate {
                 print("Failed to load sound: \(error)")
             }
         }
-        
-        func playAlertSound() {
-            audioPlayer?.play()
+    
+    // Play the loaded alert sound
+    func playAlertSound() {
+        audioPlayer?.play()
         }
 
-    // Setup for Speed
+    // Set up the slider UI and label for adjusting speed threshold
     func setupSpeedSlider() {
         slabel = UILabel(frame: CGRect(x: 20, y: 280, width: view.frame.width - 40, height: 40))
         slabel.textAlignment = .center
@@ -83,11 +85,13 @@ class ARViewController: UIViewController, ARSessionDelegate {
         view.addSubview(speedSlider)
     }
 
+    // Handle value changes from the speed slider
     @objc func speedSliderChanged(sender: UISlider) {
         speedThreshold = sender.value
         slabel.text = String(format: "Speed Threshold: %.2f m/s", speedThreshold)
     }
     
+    // Set up the slider UI and label for adjusting time-to-impact threshold
     func setupTTISlider() {
         ttilabel = UILabel(frame: CGRect(x: 20, y: 380, width: view.frame.width - 40, height: 40))
         ttilabel.textAlignment = .center
@@ -103,12 +107,13 @@ class ARViewController: UIViewController, ARSessionDelegate {
         view.addSubview(ttiSlider)
     }
 
+    // Handle value changes from the time-to-impact slider
     @objc func ttiSliderChanged(sender: UISlider) {
         ttiThreshold = sender.value
         ttilabel.text = String(format: "TTI Threshold: %.2f", ttiThreshold)
     }
 
-    
+    // Set up UI labels and start/stop button
     func setupUI() {
         startStopButton = UIButton(type: .system)
         startStopButton.setTitle("Start AR", for: .normal)
@@ -159,6 +164,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
         view.addSubview(timeToImpactLabel)
     }
     
+    // Draw a red detection box overlay in the center of the screen
     func setupGridOverlay() {
         gridOverlayView = UIView(frame: self.view.frame)
         gridOverlayView.isUserInteractionEnabled = false
@@ -184,7 +190,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
         view.addSubview(gridOverlayView)
     }
 
-    
+    // Toggle the AR session on/off with the button
     @objc func toggleARSession() {
         if isARSessionRunning {
             sceneView.session.pause()
@@ -198,12 +204,14 @@ class ARViewController: UIViewController, ARSessionDelegate {
         isARSessionRunning.toggle()
     }
     
+    // Start the AR session with scene depth enabled
     func startARSession() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.frameSemantics = .sceneDepth
         sceneView.session.run(configuration)
     }
     
+    // Called every time the AR session updates a frame
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         frameCounter += 1
         
@@ -213,6 +221,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
         }
     }
 
+    // Helper function to compute the median from an integer array
     func findMedian(array: [Int]) -> Double {
         let sortedArray = array.sorted()
         let count = sortedArray.count
@@ -229,6 +238,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
         }
     }
     
+    // Process the depth buffer to calculate speed and time-to-impact
     func processMiddleDepthData(_ depthData: CVPixelBuffer) {
         CVPixelBufferLockBaseAddress(depthData, .readOnly)
         
