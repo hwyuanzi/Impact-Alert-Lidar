@@ -213,6 +213,21 @@ class ARViewController: UIViewController, ARSessionDelegate {
         }
     }
 
+    func findMedian(array: [Int]) -> Double {
+        let sortedArray = array.sorted()
+        let count = sortedArray.count
+
+        if count % 2 == 0 {
+            // Even number of elements
+            let middleIndex1 = count / 2 - 1
+            let middleIndex2 = count / 2
+            return Double(sortedArray[middleIndex1] + sortedArray[middleIndex2]) / 2.0
+        } else {
+            // Odd number of elements
+            let middleIndex = count / 2
+            return Double(sortedArray[middleIndex])
+        }
+    }
     
     func processMiddleDepthData(_ depthData: CVPixelBuffer) {
         CVPixelBufferLockBaseAddress(depthData, .readOnly)
@@ -246,7 +261,12 @@ class ARViewController: UIViewController, ARSessionDelegate {
         }
 
         CVPixelBufferUnlockBaseAddress(depthData, .readOnly)
-
+        
+        // Step: Sort and get middle depth (median)
+        let sortedDepths = depthValues.sorted()
+        let middleIndex = sortedDepths.count / 2
+        let middleDepth = sortedDepths[middleIndex]
+        
         if threatDistances.count >= 10 && depthArray.count >= 1 {
             let prevDepthValues = depthArray.removeFirst()
             i = 0
@@ -259,7 +279,9 @@ class ARViewController: UIViewController, ARSessionDelegate {
                     let currentDepth = depthValues[i]
                     let previousDepth = prevDepthValues[i]
                     let delta = currentDepth - previousDepth
-                    if abs(delta) > 0.05 {
+
+                    // Only count pixels where current depth is less than the median (middleDepth)
+                    if abs(delta) > 0.2 && currentDepth < middleDepth {
                         numChanges += 1
                         change += delta
                         threatDistance += currentDepth
@@ -278,8 +300,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
 
             differenceLabel.text = String(format: "Difference: %.2f", difference)
 
-            // Calculate Speed
-            let timeInterval: Float32 = 10.0 / 20.0 // 10帧，每秒20帧
+            let timeInterval: Float32 = 10.0 / 20.0
             let speed = difference / timeInterval
             speedLabel.text = String(format: "Speed: %.2f m/s", speed)
 
