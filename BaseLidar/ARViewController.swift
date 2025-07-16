@@ -220,23 +220,6 @@ class ARViewController: UIViewController, ARSessionDelegate {
             processMiddleDepthData(depthData)
         }
     }
-
-    // Helper function to compute the median from an integer array
-    func findMedian(array: [Int]) -> Double {
-        let sortedArray = array.sorted()
-        let count = sortedArray.count
-
-        if count % 2 == 0 {
-            // Even number of elements
-            let middleIndex1 = count / 2 - 1
-            let middleIndex2 = count / 2
-            return Double(sortedArray[middleIndex1] + sortedArray[middleIndex2]) / 2.0
-        } else {
-            // Odd number of elements
-            let middleIndex = count / 2
-            return Double(sortedArray[middleIndex])
-        }
-    }
     
     // Process the depth buffer to calculate speed and time-to-impact
     func processMiddleDepthData(_ depthData: CVPixelBuffer) {
@@ -291,7 +274,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
                     let delta = currentDepth - previousDepth
 
                     // Only count pixels where current depth is less than the median (middleDepth)
-                    if abs(delta) > 0.2 && currentDepth < middleDepth {
+                    if abs(delta) > 0.2 && (currentDepth < middleDepth) {
                         numChanges += 1
                         change += delta
                         threatDistance += currentDepth
