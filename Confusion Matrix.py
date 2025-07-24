@@ -34,9 +34,9 @@ Car2 & 0:03:10 & -4.05 m/sec & 1.76 sec & Yes \\ \hline
 Car2 & 0:03:30 & -6.16 m/sec & 1.18 sec & Yes \\ \hline
 Car2 & 0:03:50 & -0.08 m/sec & 116.03 sec & No \\ \hline
 Car3 & 0:00:45 & -3.92 m/sec & 9999.00 sec & No \\ \hline
-Car2 & 0:01:05 & 4.33 m/sec & 9999.00 sec & No \\ \hline
-Car2 & 0:01:25 & 3.37 m/sec & 9999.00 sec & No \\ \hline
-Car2 & 0:01:45 & -0.95 m/sec & 8.92 sec & No \\ \hline
+Car3 & 0:01:05 & 4.33 m/sec & 9999.00 sec & No \\ \hline
+Car3 & 0:01:25 & 3.37 m/sec & 9999.00 sec & No \\ \hline
+Car3 & 0:01:45 & -0.95 m/sec & 8.92 sec & No \\ \hline
 Bus1 & 0:16:40 & -0.68 m/sec & 24.91 sec & No \\ \hline
 Bus1 & 0:17:00 & -0.62 m/sec & 21.24 sec & No \\ \hline
 Bus1 & 0:17:20 & -4.12 m/sec & 3.44 sec & No \\ \hline
