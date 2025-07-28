@@ -4,9 +4,9 @@ from collections import defaultdict
 # LaTeX
 latex_table = r"""
 \textbf{Video ID} & \textbf{Time In Video} & \textbf{Speed} & \textbf{Time to Impact} & \textbf{Collision Danger} \\ \hline
-Walking1 & 0:03:50 & -0.77 m/sec & 5.48s sec & No \\ \hline
+Walking1 & 0:03:50 & -0.77 m/sec & 5.48 sec & No \\ \hline
 Walking1 & 0:04:10 & -0.63 m/sec & 6.33 sec & No \\ \hline
-Walking1 & 0:04:30 & -2.5 m/sec & 1.75 sec & Yes \\ \hline
+Walking1 & 0:04:30 & -2.50 m/sec & 1.75 sec & Yes \\ \hline
 Walking1 & 0:04:50 & -3.63 m/sec & 1.12 sec & Yes \\ \hline
 Walking1 & 0:05:10 & -4.28 m/sec & 0.91 sec & Yes \\ \hline
 Walking1 & 0:05:30 & -6.34 m/sec & 0.58 sec & Yes \\ \hline
@@ -18,6 +18,71 @@ Walking2 & 0:04:00 & -8.78 m/sec & 0.52 sec & Yes \\ \hline
 Walking2 & 0:04:20 & -10.40 m/sec & 0.39 sec & Yes \\ \hline
 Walking2 & 0:04:40 & -8.80 m/sec & 0.41 sec & Yes \\ \hline
 Walking2 & 0:05:00 & -8.10 m/sec & 0.37 sec & Yes \\ \hline
+Walking3 & 0:04:30 & -2.70 m/sec & 1.64 sec & Yes \\ \hline
+Walking3 & 0:04:50 & -1.63 m/sec & 2.59 sec & No \\ \hline
+Walking3 & 0:05:10 & -3.17 m/sec & 1.04 sec & Yes \\ \hline
+Walking3 & 0:05:30 & -2.35 m/sec & 1.46 sec & Yes \\ \hline
+Walking3 & 0:05:50 & 0.35 m/sec & 9999.00 sec & No \\ \hline
+Walking3 & 0:06:10 & 0.14 m/sec & 9999.00 sec & No \\ \hline
+Walking3 & 0:06:30 & -0.24 m/sec & 22.47 sec & No \\ \hline
+Walking3 & 0:06:50 & -0.37 m/sec & 1391.66 sec & No \\ \hline
+Walking3 & 0:16:55 & -6.08 m/sec & 1.26 sec & Yes \\ \hline
+Walking3 & 0:17:15 & -3.18 m/sec & 1.24 sec & Yes \\ \hline
+Walking3 & 0:17:35 & -2.99 m/sec & 1.61 sec & Yes \\ \hline
+Walking3 & 0:17:55 & -4.23 m/sec & 0.82 sec & Yes \\ \hline
+Walking4 & 0:05:00 & -2.11 m/sec & 2.51 sec & No \\ \hline
+Walking4 & 0:05:20 & -2.45 m/sec & 1.46 sec & No \\ \hline
+Walking4 & 0:06:00 & -4.09 m/sec & 1.02 sec & No \\ \hline
+Walking4 & 0:06:20 & -0.20 m/sec & 4.40 sec & No \\ \hline
+Walking5 & 0:02:20 & -6.76 m/sec & 0.44 sec & Yes \\ \hline
+Walking5 & 0:03:10 & -4.13 m/sec & 0.69 sec & Yes \\ \hline
+Walking6 & 0:04:30 & -5.67 m/sec & 0.45 sec & Yes \\ \hline
+Walking6 & 0:04:50 & -9.66 m/sec & 0.23 sec & Yes \\ \hline
+Walking6 & 0:05:10 & -11.32 m/sec & 0.17 sec & Yes \\ \hline
+Walking6 & 0:05:30 & -10.38 m/sec & 0.16 sec & Yes \\ \hline
+Walking7 & 0:17:40 & -2.69 m/sec & 1.99 sec & Yes \\ \hline
+Walking7 & 0:18:00 & -3.31 m/sec & 1.39 sec & Yes \\ \hline
+Walking7 & 0:18:20 & -7.09 m/sec & 0.69 sec & Yes \\ \hline
+Walking7 & 0:18:40 & -2.09 m/sec & 1.76 sec & Yes \\ \hline
+Walking7 & 0:19:00 & -4.44 m/sec & 0.73 sec & Yes \\ \hline
+Walking8 & 0:05:00 & -3.39 m/sec & 1.72 sec & Yes \\ \hline
+Walking8 & 0:05:20 & -3.73 m/sec & 1.71 sec & Yes \\ \hline
+Walking8 & 0:05:40 & -0.14 m/sec & 9999.00 sec & No \\ \hline
+Walking9 & 0:08:24 & -2.21 m/sec & 35.71 sec & No \\ \hline
+Walking9 & 0:09:02 & -0.35 m/sec & 16.72 sec & No \\ \hline
+Walking9 & 0:09:16 & -0.27 m/sec & 18.83 sec & No \\ \hline
+Walking9 & 0:10:04 & -0.22 m/sec & 20.82 sec & No \\ \hline
+Walking9 & 0:10:20 & -0.28 m/sec & 12.92 sec & No \\ \hline
+Walking10 & 0:04:23 & -0.31 m/sec & 15.52 sec & No \\ \hline
+Walking10 & 0:04:28 & -0.90 m/sec & 5.28 sec & No \\ \hline
+Walking10 & 0:06:05 & -1.70 m/sec & 2.37 sec & No \\ \hline
+Walking10 & 0:06:16 & -2.16 m/sec & 1.71 sec & No \\ \hline
+Walking10 & 0:07:14 & -2.86 m/sec & 0.99 sec & Yes \\ \hline
+Walking10 & 0:08:03 & -2.74 m/sec & 0.84 sec & Yes \\ \hline
+Walking10 & 0:09:05 & -2.43 m/sec & 0.66 sec & Yes \\ \hline
+Walking11 & 0:01:20 & -0.51 m/sec & 10.71 sec & No \\ \hline
+Walking11 & 0:01:25 & -0.33 m/sec & 16.81 sec & No \\ \hline
+Walking11 & 0:02:00 & -0.24 m/sec & 22.24 sec & No \\ \hline
+Walking11 & 0:03:02 & -0.88 m/sec & 5.66 sec & No \\ \hline
+Walking11 & 0:04:10 & -3.58 m/sec & 0.96 sec & Yes \\ \hline
+Walking11 & 0:04:16 & -3.81 m/sec & 0.84 sec & Yes \\ \hline
+Walking12 & 0:06:26 & -1.66 m/sec & 3.25 sec & No \\ \hline
+Walking12 & 0:07:00 & -1.84 m/sec & 2.84 sec & No \\ \hline
+Walking12 & 0:07:17 & -2.93 m/sec & 1.52 sec & No \\ \hline
+Walking12 & 0:07:27 & -3.76 m/sec & 1.12 sec & Yes \\ \hline
+Walking12 & 0:08:06 & -5.42 m/sec & 0.52 sec & Yes \\ \hline
+Walking12 & 0:08:15 & -3.38 m/sec & 1.09 sec & Yes \\ \hline
+Walking13 & 0:11:28 & -2.35 m/sec & 3.38 sec & No \\ \hline
+Walking13 & 0:12:08 & -2.81 m/sec & 2.14 sec & No \\ \hline
+Walking13 & 0:12:21 & -4.36 m/sec & 0.73 sec & Yes \\ \hline
+Walking13 & 0:12:28 & -3.92 m/sec & 0.80 sec & Yes \\ \hline
+Walking13 & 0:13:09 & -2.62 m/sec & 1.33 sec & No \\ \hline
+Walking14 & 0:07:20 & -2.54 m/sec & 1.78 sec & No \\ \hline
+Walking14 & 0:07:23 & -3.09 m/sec & 1.35 sec & No \\ \hline
+Walking14 & 0:07:27 & -3.72 m/sec & 1.01 sec & Yes \\ \hline
+Walking14 & 0:08:01 & -4.21 m/sec & 0.83 sec & Yes \\ \hline
+Walking14 & 0:08:07 & -4.57 m/sec & 0.72 sec & Yes \\ \hline
+Walking14 & 0:08:17 & -4.35 m/sec & 0.66 sec & Yes \\ \hline
 Car1 & 0:01:15 & -1.67 m/sec & 4.52 sec & No \\ \hline
 Car1 & 0:01:35 & -5.08 m/sec & 1.58 sec & Yes \\ \hline
 Car1 & 0:01:55 & -6.02 m/sec & 1.18 sec & Yes \\ \hline
@@ -51,44 +116,40 @@ Bus2 & 0:06:05 & -3.61 m/sec & 3.00 sec & No \\ \hline
 Bus2 & 0:06:35 & -3.20 m/sec & 3.57 sec & No \\ \hline
 Bus2 & 0:06:55 & -3.05 m/sec & 3.54 sec & No \\ \hline
 Scooter1 & 0:00:22 & -4.50 m/sec & 2.73 sec & Yes \\ \hline
-Scooter1 & 0:00:42 & -0.90 m/sec & 11.81 sec & Yes \\ \hline
+Scooter1 & 0:00:42 & -0.90 m/sec & 11.81 sec & Yes\\ \hline
 Scooter1 & 0:01:05 & -0.53 m/sec & 21.63 sec & No \\ \hline
 Scooter2 & 0:00:35 & -3.5 m/sec & 1.03 sec & Yes \\ \hline
 Scooter2 & 0:00:55 & -4.86 m/sec & 1.03 sec & No \\ \hline
-Trike1 & 0:04:50 & -0.25 m/sec & 45.90 sec & No \\ \hline
-Trike1 & 0:05:10 & -6.03 m/sec & 2.37 sec & Yes \\ \hline
-Trike1 & 0:05:30 & -8.75 m/sec & 1.39 sec & Yes \\ \hline
-Trike1 & 0:05:50 & -7.97 m/sec & 1.09 sec & Yes \\ \hline
+Scooter3 & 0:04:50 & -0.25 m/sec & 45.90 sec & No \\ \hline
+Scooter3 & 0:05:10 & -6.03 m/sec & 2.37 sec & Yes \\ \hline
+Scooter3 & 0:05:30 & -8.75 m/sec & 1.39 sec & Yes \\ \hline
+Scooter3 & 0:05:50 & -7.97 m/sec & 1.09 sec & Yes \\ \hline
 """
 
 
 # Extraction
 def parse_latex_table(latex_table):
     data = []
-    skipped_count = 0 #Counter
-
     for line in latex_table.split("\n"):
         if "&" in line:
             parts = [x.strip() for x in line.split("&")]
             if len(parts) >= 5:
+                video_id = parts[0]
+                timestamp = parts[1]
                 speed_match = re.search(r"-?\d+\.?\d*", parts[2])
                 tti_match = re.search(r"\d+\.?\d*", parts[3])
-                danger_str = re.sub(r"\\.*", "", parts[4]).strip().lower()
+                danger_str = parts[4].split("\\")[0].strip().lower()
                 if speed_match and tti_match:
                     speed = float(speed_match.group())
                     tti = float(tti_match.group())
-                    if tti >= 9999:
-                        skipped_count += 1
-                        continue
                     danger = danger_str == "yes"
-                    data.append((speed, tti, danger))
-
-    print(f"\n Skipped rows due to TTI ≥ 9999: {skipped_count}")
+                    data.append((video_id, timestamp, speed, tti, danger))
+                else:
+                    print(f"[Parse Skip] Line skipped due to unmatched speed or tti: {line}")
     return data
 
 def compute_confusion_by_vehicle(latex_table, speed_thresh=-2.2, tti_thresh=3.0):
     vehicle_confusion = defaultdict(lambda: defaultdict(int))
-
     for line in latex_table.strip().split("\n"):
         if "&" not in line:
             continue
@@ -100,15 +161,14 @@ def compute_confusion_by_vehicle(latex_table, speed_thresh=-2.2, tti_thresh=3.0)
             vehicle = vehicle_match.group()
             speed_match = re.search(r"-?\d+\.?\d*", parts[2])
             tti_match = re.search(r"\d+\.?\d*", parts[3])
-            danger_str = re.sub(r"\\.*", "", parts[4]).strip().lower()
+            danger_str = parts[4].split("\\")[0].strip().lower()
             if speed_match and tti_match:
                 speed = float(speed_match.group())
                 tti = float(tti_match.group())
-                if tti >= 9999:
-                    continue
                 actual_danger = danger_str == "yes"
-                predicted_danger = (speed <= speed_thresh) and (tti <= tti_thresh)
-
+                predicted_danger = (speed < speed_thresh) and (tti < tti_thresh)
+                if tti >= 9999:
+                    predicted_danger = False
                 if actual_danger and predicted_danger:
                     vehicle_confusion[vehicle]["TP"] += 1
                 elif not actual_danger and predicted_danger:
@@ -117,7 +177,6 @@ def compute_confusion_by_vehicle(latex_table, speed_thresh=-2.2, tti_thresh=3.0)
                     vehicle_confusion[vehicle]["FN"] += 1
                 else:
                     vehicle_confusion[vehicle]["TN"] += 1
-
     return vehicle_confusion
 
 data = parse_latex_table(latex_table)
@@ -129,17 +188,22 @@ TTI_THRESHOLD = 3.0
 # Confusion Matrix
 confusion_matrix = defaultdict(int)  # TP, FP, FN, TN
 
-for speed, tti, actual_danger in data:
+false_negatives = []
+for video_id, timestamp, speed, tti, actual_danger in data:
     predicted_danger = (speed <= SPEED_THRESHOLD) and (tti <= TTI_THRESHOLD)
+    if tti >= 9999:
+        predicted_danger = False  # Always predict as safe if TTI is 9999
     if actual_danger and predicted_danger:
         confusion_matrix["TP"] += 1
     elif not actual_danger and predicted_danger:
         confusion_matrix["FP"] += 1
+        print(f"[FP] Predicted Danger, Actually Safe → {video_id} @ {timestamp} | Speed: {speed} | TTI: {tti}")
     elif actual_danger and not predicted_danger:
         confusion_matrix["FN"] += 1
+        false_negatives.append((video_id, timestamp, speed, tti))
     else:
         confusion_matrix["TN"] += 1
-
+        print(f"[TN] Predicted Safe, Actually Safe → {video_id} @ {timestamp} | Speed: {speed} | TTI: {tti}")
 
 # Indicators
 def compute_metrics(confusion_matrix):
@@ -186,3 +250,12 @@ print("\n=== Confusion Matrix by Vehicle Type ===")
 for vehicle in sorted(vehicle_confusions):
     cm = vehicle_confusions[vehicle]
     print(f"{vehicle}: TP={cm['TP']}, TN={cm['TN']}, FP={cm['FP']}, FN={cm['FN']}")
+
+print("\n=== False Negatives ===")
+if false_negatives:
+    for idx, (video_id, timestamp, speed, tti) in enumerate(false_negatives, 1):
+        print(f"{idx}. {video_id} @ {timestamp} | Speed: {speed:.2f} m/sec | TTI: {tti:.2f} sec")
+else:
+    print("No False Negatives.")
+
+print(f"Total Parsed Rows: {len(data)}")

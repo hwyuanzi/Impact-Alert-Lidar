@@ -57,6 +57,8 @@ alltimes = []
 alldangers = []
 with open('impactexper.csv') as csvfile:
   csvin = csv.reader(csvfile, delimiter=',', quotechar='|')
+  # Skip Header
+  next(csvin)
   for row in csvin:
     allrows.append(row)
     allspeeds.append(float(row[2]))
