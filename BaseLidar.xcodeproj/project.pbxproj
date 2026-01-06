@@ -38,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6E4EB1A22E306DF50052C5EF /* Confusion Matrix.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "Confusion Matrix.py"; sourceTree = "<group>"; };
+		6E4EB1A32E306DF50052C5EF /* impact.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = impact.py; sourceTree = "<group>"; };
 		BEF95D0F2C10EF8400B1BC5B /* BaseLidar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BaseLidar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF95D122C10EF8400B1BC5B /* BaseLidarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLidarApp.swift; sourceTree = "<group>"; };
 		BEF95D142C10EF8400B1BC5B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -83,6 +85,8 @@
 		BEF95D062C10EF8400B1BC5B = {
 			isa = PBXGroup;
 			children = (
+				6E4EB1A22E306DF50052C5EF /* Confusion Matrix.py */,
+				6E4EB1A32E306DF50052C5EF /* impact.py */,
 				BEF95D112C10EF8400B1BC5B /* BaseLidar */,
 				BEF95D222C10EF8700B1BC5B /* BaseLidarTests */,
 				BEF95D2C2C10EF8700B1BC5B /* BaseLidarUITests */,
@@ -212,7 +216,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					BEF95D0E2C10EF8400B1BC5B = {
 						CreatedOnToolsVersion = 15.3;
@@ -446,7 +450,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BaseLidar/Preview Content\"";
-				DEVELOPMENT_TEAM = A2ZW2P5UUP;
+				DEVELOPMENT_TEAM = 7933FK4JXB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Lidar Usage";
@@ -476,7 +480,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BaseLidar/Preview Content\"";
-				DEVELOPMENT_TEAM = A2ZW2P5UUP;
+				DEVELOPMENT_TEAM = 7933FK4JXB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Lidar Usage";
@@ -501,7 +505,6 @@
 		BEF95D372C10EF8700B1BC5B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -521,7 +524,6 @@
 		BEF95D382C10EF8700B1BC5B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -541,7 +543,6 @@
 		BEF95D3A2C10EF8700B1BC5B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7FZ36PJ7VU;
@@ -559,7 +560,6 @@
 		BEF95D3B2C10EF8700B1BC5B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7FZ36PJ7VU;

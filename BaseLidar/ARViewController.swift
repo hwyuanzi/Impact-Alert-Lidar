@@ -1,18 +1,18 @@
 import UIKit
 import ARKit
-
+import AVFoundation
+// Main AR view controller that handles UI, AR session, depth processing, and alerts
 class ARViewController: UIViewController, ARSessionDelegate {
-    
     var sceneView: ARSCNView!
     var startStopButton: UIButton!
-    var statusLabel: UILabel!
-    var currentAverageLabel: UILabel!
-    var previousAverageLabel: UILabel!
-    var differenceLabel: UILabel!
-    var speedLabel: UILabel!
-    var timeToImpactLabel: UILabel!
+    // var statusLabel: UILabel!
+    // var currentAverageLabel: UILabel!
+    // var previousAverageLabel: UILabel!
+    // var differenceLabel: UILabel!
+    // var speedLabel: UILabel!
+    // var timeToImpactLabel: UILabel!
     var isARSessionRunning: Bool = false
-    var gridOverlayView: UIView!
+    // var gridOverlayView: UIView!
     var ttiSlider: UISlider!
     var ttilabel: UILabel!
     var ttiThreshold: Float = 3
@@ -22,7 +22,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
     var speedThresholdLabel: UILabel!
     var speedSlider: UISlider!
     var slabel: UILabel!
-    
+    var depthArray: [[Float32]] = []
     var middleSums: [Float32] = []
     var frameCounter: Int = 0
     var threatDistances: [Float32] = []
@@ -30,7 +30,18 @@ class ARViewController: UIViewController, ARSessionDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
+        sceneView = ARSCNView(frame: .zero)
+        sceneView.isHidden = true
+        view.addSubview(sceneView)
+        sceneView.session.delegate = self
+
+        guard ARWorldTrackingConfiguration.supportsFrameSemantics(.sceneDepth) else {
+            fatalError("LiDAR not supported on this device.")
+        }
+
         
+        /*
         sceneView = ARSCNView(frame: self.view.frame)
         self.view.addSubview(sceneView)
         
@@ -41,14 +52,16 @@ class ARViewController: UIViewController, ARSessionDelegate {
         let configuration = ARWorldTrackingConfiguration()
         configuration.frameSemantics = .sceneDepth
         sceneView.session.delegate = self
+        */
         
-        setupUI()
-        setupGridOverlay()
-        setupTTISlider()
-        setupSpeedSlider()
-        loadSound()
+        setupUI()               // Set up user interface elements
+        // setupGridOverlay()      // Set up the detection grid overlay on the screen
+        setupTTISlider()        // Set up the time-to-impact threshold slider
+        setupSpeedSlider()      // Set up the speed threshold slider
+        loadSound()             // Load alert sound
     }
     
+    // Load the alert sound from the app bundle
     func loadSound() {
             guard let soundURL = Bundle.main.url(forResource: "alert", withExtension: "mp3") else {
                 print("Sound file not found")
@@ -62,12 +75,13 @@ class ARViewController: UIViewController, ARSessionDelegate {
                 print("Failed to load sound: \(error)")
             }
         }
-        
-        func playAlertSound() {
-            audioPlayer?.play()
+    
+    // Play the loaded alert sound
+    func playAlertSound() {
+        audioPlayer?.play()
         }
 
-    // Setup for Speed
+    // Set up the slider UI and label for adjusting speed threshold
     func setupSpeedSlider() {
         slabel = UILabel(frame: CGRect(x: 20, y: 280, width: view.frame.width - 40, height: 40))
         slabel.textAlignment = .center
@@ -83,16 +97,18 @@ class ARViewController: UIViewController, ARSessionDelegate {
         view.addSubview(speedSlider)
     }
 
+    // Handle value changes from the speed slider
     @objc func speedSliderChanged(sender: UISlider) {
         speedThreshold = sender.value
         slabel.text = String(format: "Speed Threshold: %.2f m/s", speedThreshold)
     }
     
+    // Set up the slider UI and label for adjusting time-to-impact threshold
     func setupTTISlider() {
         ttilabel = UILabel(frame: CGRect(x: 20, y: 380, width: view.frame.width - 40, height: 40))
         ttilabel.textAlignment = .center
         ttilabel.textColor = .blue
-        ttilabel.text = "TTI Threshold: \(ttiThreshold) s"
+        ttilabel.text = "Time to Impact Threshold: \(ttiThreshold) s"
         view.addSubview(ttilabel)
         
         ttiSlider = UISlider(frame: CGRect(x: 20, y: 420, width: view.frame.width - 40, height: 40))
@@ -103,23 +119,58 @@ class ARViewController: UIViewController, ARSessionDelegate {
         view.addSubview(ttiSlider)
     }
 
+    // Handle value changes from the time-to-impact slider
     @objc func ttiSliderChanged(sender: UISlider) {
         ttiThreshold = sender.value
-        ttilabel.text = String(format: "TTI Threshold: %.2f", ttiThreshold)
+        ttilabel.text = String(format: "Time to Impact Threshold: %.2f", ttiThreshold)
     }
 
-    
+    // Set up UI labels and start/stop button
     func setupUI() {
         startStopButton = UIButton(type: .system)
-        startStopButton.setTitle("Start AR", for: .normal)
+        startStopButton.setTitle("Start LiDAR", for: .normal)
         startStopButton.addTarget(self, action: #selector(toggleARSession), for: .touchUpInside)
+        //Button Size
+            let buttonWidth: CGFloat = 140
+            let buttonHeight: CGFloat = 50
+
+            //Location
+            startStopButton.frame = CGRect(
+                x: (view.frame.width - buttonWidth) / 2,
+                y: view.frame.height - 180,
+                width: buttonWidth,
+                height: buttonHeight
+            )
+
+            startStopButton.backgroundColor = .white
+            startStopButton.layer.cornerRadius = 5
+            startStopButton.layer.borderWidth = 1
+            startStopButton.layer.borderColor = UIColor.black.cgColor
+            view.addSubview(startStopButton)
+        /*
         startStopButton.frame = CGRect(x: 20, y: view.frame.height - 60, width: 100, height: 40)
         startStopButton.backgroundColor = .white
         startStopButton.layer.cornerRadius = 5
         startStopButton.layer.borderWidth = 1
         startStopButton.layer.borderColor = UIColor.black.cgColor
         view.addSubview(startStopButton)
+         */
         
+        // Disclaimer
+        let disclaimerLabel = UILabel(frame: CGRect(
+                x: 20,
+                y: view.frame.height - 120,
+                width: view.frame.width - 40,
+                height: 60
+            ))
+            disclaimerLabel.textAlignment = .center
+            disclaimerLabel.textColor = .lightGray
+            disclaimerLabel.font = UIFont.systemFont(ofSize: 12)
+            disclaimerLabel.numberOfLines = 0
+            disclaimerLabel.text = "This app is for experimental use only. It may occasionally give false alerts or fail to provide alerts when needed. Please remain aware of your surroundings as you normally would without using this app."
+            view.addSubview(disclaimerLabel)
+        
+        /*
         statusLabel = UILabel(frame: CGRect(x: 20, y: 40, width: view.frame.width - 40, height: 40))
         statusLabel.textAlignment = .center
         statusLabel.textColor = .white
@@ -157,47 +208,59 @@ class ARViewController: UIViewController, ARSessionDelegate {
         timeToImpactLabel.textColor = .blue
         timeToImpactLabel.text = "Time to Impact: N/A"
         view.addSubview(timeToImpactLabel)
+        */
     }
     
+    /*
+    // Draw a red detection box overlay in the center of the screen
     func setupGridOverlay() {
         gridOverlayView = UIView(frame: self.view.frame)
         gridOverlayView.isUserInteractionEnabled = false
         gridOverlayView.backgroundColor = .clear
-        
-        let gridWidth = gridOverlayView.frame.width / 3
-        let gridHeight = gridOverlayView.frame.height / 3
-        
-        for i in 0...2 {
-            for j in 0...2 {
-                let gridCell = UIView(frame: CGRect(x: CGFloat(i) * gridWidth, y: CGFloat(j) * gridHeight, width: gridWidth, height: gridHeight))
-                gridCell.layer.borderWidth = 1
-                gridCell.layer.borderColor = UIColor.red.cgColor
-                gridOverlayView.addSubview(gridCell)
-            }
-        }
-        
+
+        let viewWidth = gridOverlayView.frame.width
+        let viewHeight = gridOverlayView.frame.height
+
+        let startX = viewWidth / 12
+        let endX = 11 * (viewWidth / 12)
+        let startY = viewHeight / 3
+        let endY = 2 * (viewHeight / 3)
+
+        let regionWidth = endX - startX
+        let regionHeight = endY - startY
+
+        let detectionRect = UIView(frame: CGRect(x: startX, y: startY, width: regionWidth, height: regionHeight))
+        detectionRect.layer.borderWidth = 2
+        detectionRect.layer.borderColor = UIColor.red.cgColor
+        detectionRect.backgroundColor = .clear
+
+        gridOverlayView.addSubview(detectionRect)
         view.addSubview(gridOverlayView)
     }
-    
+    */
+
+    // Toggle the AR session on/off with the button
     @objc func toggleARSession() {
         if isARSessionRunning {
             sceneView.session.pause()
-            startStopButton.setTitle("Start AR", for: .normal)
-            statusLabel.text = "AR Session Paused"
+            startStopButton.setTitle("Start LiDAR", for: .normal)
+            // statusLabel.text = "LiDAR Session Paused"
         } else {
             startARSession()
-            startStopButton.setTitle("Stop AR", for: .normal)
-            statusLabel.text = "AR Session Running"
+            startStopButton.setTitle("Stop LiDAR", for: .normal)
+            // statusLabel.text = "LiDAR Session Running"
         }
         isARSessionRunning.toggle()
     }
     
+    // Start the AR session with scene depth enabled
     func startARSession() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.frameSemantics = .sceneDepth
         sceneView.session.run(configuration)
     }
     
+    // Called every time the AR session updates a frame
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         frameCounter += 1
         
@@ -206,10 +269,18 @@ class ARViewController: UIViewController, ARSessionDelegate {
             processMiddleDepthData(depthData)
         }
     }
-
     
+    // Process the depth buffer to calculate speed and time-to-impact
     func processMiddleDepthData(_ depthData: CVPixelBuffer) {
         CVPixelBufferLockBaseAddress(depthData, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(depthData, .readOnly) }
+        
+        var depthValues: [Float32] = []
+        var change: Float32 = 0
+        var numChanges = 0
+        var i = 0
+        var difference: Float32 = 0
+        var threatDistance: Float32 = 0
 
         let width = CVPixelBufferGetWidth(depthData)
         let height = CVPixelBufferGetHeight(depthData)
@@ -218,14 +289,12 @@ class ARViewController: UIViewController, ARSessionDelegate {
             return
         }
 
-        let floatBuffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<Float32>.self)
+        let floatBuffer = baseAddress.assumingMemoryBound(to: Float32.self)
 
-        let startX = width / 3
-        let endX = 2 * (width / 3)
+        let startX = width / 12
+        let endX = 11 * (width / 12)
         let startY = height / 3
         let endY = 2 * (height / 3)
-
-        var depthValues: [Float32] = []
 
         for y in startY..<endY {
             for x in startX..<endX {
@@ -235,57 +304,79 @@ class ARViewController: UIViewController, ARSessionDelegate {
         }
 
         CVPixelBufferUnlockBaseAddress(depthData, .readOnly)
+        
+        // Step: Sort and get middle depth (median)
+        let sortedDepths = depthValues.sorted()
+        let middleIndex = sortedDepths.count / 2
+        let middleDepth = sortedDepths[middleIndex]
+        
+        if threatDistances.count >= 10 && depthArray.count >= 1 {
+            let prevDepthValues = depthArray.removeFirst()
+            i = 0
+            change = 0
+            numChanges = 0
+            threatDistance = 0
+            
+            for _ in startY..<endY {
+                for _ in startX..<endX {
+                    let currentDepth = depthValues[i]
+                    let previousDepth = prevDepthValues[i]
+                    let delta = currentDepth - previousDepth
 
-        depthValues.sort()
-        let quartileIndex = depthValues.count / 4
-        let d = depthValues[quartileIndex]
+                    // Only count pixels where current depth is less than the median (middleDepth)
+                    if abs(delta) > 0.2 && (currentDepth < middleDepth) {
+                        numChanges += 1
+                        change += delta
+                        threatDistance += currentDepth
+                    }
+                    i += 1
+                }
+            }
 
-        let threshold = d + min(0.5, 0.1 * d)
+            if numChanges > 0 {
+                difference = change / Float32(numChanges)
+                threatDistance = threatDistance / Float32(numChanges)
+            } else {
+                difference = 0
+                threatDistance = 0
+            }
 
-        let closePoints = depthValues.filter { $0 <= threshold }
-        let threatDistance = closePoints.reduce(0, +) / Float32(closePoints.count)
-        var previousThreatDistance: Float32? = nil
+            // differenceLabel.text = String(format: "Difference: %.2f", difference)
 
-        if threatDistances.count >= 10 {
-            previousThreatDistance = threatDistances.removeFirst()
-            let difference = threatDistance - previousThreatDistance!
-
-            differenceLabel.text = String(format: "Difference: %.2f", difference)
-
-
-            // Calculate Speed
-            let timeInterval: Float = 10.0 / 20.0 // Assuming ARKit runs at 20 FPS
+            let timeInterval: Float32 = 10.0 / 20.0
             let speed = difference / timeInterval
-            speedLabel.text = String(format: "Speed: %.2f m/s", speed)
+            // speedLabel.text = String(format: "Speed: %.2f m/s", speed)
 
             // Calculate Time to Impact
-            let timeToImpact: Float
-            if speed > 0 {
+            let timeToImpact: Float32
+            if speed >= 0 {
                 timeToImpact = 9999
             } else {
                 timeToImpact = threatDistance / abs(speed)
             }
-            timeToImpactLabel.text = String(format: "Time to Impact: %.2f s", timeToImpact)
-            
+            // timeToImpactLabel.text = String(format: "Time to Impact: %.2f s", timeToImpact)
+
             if timeToImpact < ttiThreshold && speed < speedThreshold  {
-                differenceLabel.textColor = .red
-                timeToImpactLabel.textColor = .red
+                // differenceLabel.textColor = .red
+                // timeToImpactLabel.textColor = .red
+                playAlertSound()
             } else {
-                differenceLabel.textColor = .blue
-                timeToImpactLabel.textColor = .blue
+                // differenceLabel.textColor = .blue
+                // timeToImpactLabel.textColor = .blue
             }
-            
         }
 
         threatDistances.append(threatDistance)
+        depthArray.append(depthValues)
         
-        // among 10 frame -> 9th
-        if let prev = previousThreatDistance {
+        /*
+        if let prev = threatDistances.dropLast().last {
             previousAverageLabel.text = String(format: "Previous Average: %.2f", prev)
         } else {
             previousAverageLabel.text = "Previous Average: N/A"
         }
-        // 10th
+
         currentAverageLabel.text = String(format: "Current Average: %.2f", threatDistance)
+         */
     }
 }
