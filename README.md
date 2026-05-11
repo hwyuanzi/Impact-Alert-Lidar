@@ -219,6 +219,12 @@ The first row is treated as a header and skipped.
 
 ImpactAlert is a research prototype, not a certified safety device. It may produce false positives and false negatives. Users should not rely on it as their only collision-avoidance mechanism and should continue to use normal situational awareness and established mobility practices.
 
+## License
+
+The source code in this repository is released under the MIT License. See `LICENSE` for the full license text.
+
+The associated paper should be cited separately using the citation below.
+
 ## Development Notes
 
 - Do not commit Xcode user-state files such as `xcuserdata/`, `.xcuserstate`, or local workspace settings.
