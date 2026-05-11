@@ -1,0 +1,11 @@
+.DS_Store
+**/.DS_Store
+
+# Xcode user-specific state
+**/*.xcuserstate
+**/xcuserdata/
+**/xcshareddata/WorkspaceSettings.xcsettings
+
+# Local build artifacts
+DerivedData/
+build/
